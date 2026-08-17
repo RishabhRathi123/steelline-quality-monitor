@@ -1,0 +1,4 @@
+@EndUserText.label: 'Service for Quality Observations'
+define service ZUI_QUALITYOBS {
+  expose ZC_QualityObs as Observation;
+}
