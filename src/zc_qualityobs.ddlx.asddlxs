@@ -1,9 +1,7 @@
 @Metadata.layer: #CORE
 
 @UI: {
-  headerInfo: { typeName: 'Quality Observation',
-                typeNamePlural: 'Quality Observations' },
-  presentationVariant: [{ sortOrder: [{ by: 'CreatedAt', direction: #DESC }] }]
+  presentationVariant: [ { sortOrder: [ { by: 'CreatedAt', direction: #DESC } ] } ]
 }
 
 annotate view ZC_QualityObs with
@@ -11,32 +9,37 @@ annotate view ZC_QualityObs with
   @UI.hidden: true
   ObservationUUID;
 
-  @UI.lineItem: [ { position: 10, importance: #HIGH, label: 'ID' } ]
+  @UI: { lineItem:       [ { position: 10, importance: #HIGH, label: 'ID' } ] }
   ObservationID;
 
-  @UI.lineItem: [ { position: 20, importance: #HIGH } ]
+  @UI: { lineItem:       [ { position: 20, importance: #HIGH } ],
+         selectionField: [ { position: 10 } ] }
   Material;
 
-  @UI.lineItem: [ { position: 30 } ]
+  @UI: { lineItem:       [ { position: 30 } ],
+         selectionField: [ { position: 20 } ] }
   HeatNumber;
 
-  @UI.lineItem: [ { position: 40 } ]
+  @UI: { lineItem:       [ { position: 40 } ],
+         selectionField: [ { position: 30 } ] }
   DefectType;
 
-  @UI.lineItem: [ { position: 50 } ]
+  @UI: { lineItem:       [ { position: 50, criticality: 'Severity' } ],
+         selectionField: [ { position: 40 } ] }
   Severity;
 
-  @UI.lineItem: [ { position: 60 } ]
+  @UI: { lineItem:       [ { position: 60 } ] }
   Status;
 
-  @UI.lineItem: [ { position: 80, label: 'Reported By' } ]
+  @UI: { lineItem:       [ { position: 80, label: 'Reported By' } ] }
   CreatedBy;
 
-  @UI.lineItem: [ { position: 90, label: 'Reported At' } ]
+  @UI: { lineItem:       [ { position: 90, label: 'Reported At' } ] }
   CreatedAt;
 
   @UI.hidden: true
   LastChangedAt;
+
   @UI.hidden: true
   LocalLastChangedAt;
 }
