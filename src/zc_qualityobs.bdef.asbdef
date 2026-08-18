@@ -13,4 +13,9 @@ define behavior for ZC_QualityObs alias Observation
   use action Discard;
   use action Resume;
   use action Prepare;
+
+  side effects
+  {
+    field Severity affects field CommentText;
+  }
 }

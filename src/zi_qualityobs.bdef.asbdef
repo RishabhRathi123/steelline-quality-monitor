@@ -19,6 +19,8 @@ etag master LocalLastChangedAt
                      LastChangedBy, LastChangedAt,
                      LocalLastChangedBy, LocalLastChangedAt;
   field ( mandatory ) Material, HeatNumber, DefectType, Severity;
+  field ( features : instance ) CommentText;
+  determination setDefaults on modify { create; }
 
   draft action Resume;
   draft action Edit;
