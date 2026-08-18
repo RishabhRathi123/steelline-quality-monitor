@@ -1,0 +1,46 @@
+managed implementation in class ZBP_I_QUALITYOBS unique;
+strict ( 2 );
+with draft;
+
+define behavior for ZI_QualityObs alias Observation
+persistent table zquality_obs
+draft table zquality_obs_d
+lock master total etag LastChangedAt
+authorization master ( global )
+etag master LocalLastChangedAt
+{
+  create;
+  update;
+  delete;
+
+  field ( numbering : managed, readonly ) ObservationUUID;
+  field ( readonly ) ObservationID, Status,
+                     CreatedBy, CreatedAt,
+                     LastChangedBy, LastChangedAt,
+                     LocalLastChangedBy, LocalLastChangedAt;
+  field ( mandatory ) Material, HeatNumber, DefectType, Severity;
+
+  draft action Resume;
+  draft action Edit;
+  draft action Activate optimized;
+  draft action Discard;
+  draft determine action Prepare;
+
+  mapping for zquality_obs
+  {
+    ObservationUUID     = obs_uuid;
+    ObservationID       = obs_id;
+    Material            = material;
+    HeatNumber          = heat_number;
+    DefectType          = defect_type;
+    Severity            = severity;
+    CommentText         = comment_text;
+    Status              = status;
+    CreatedBy           = created_by;
+    CreatedAt           = created_at;
+    LastChangedBy       = last_changed_by;
+    LastChangedAt       = last_changed_at;
+    LocalLastChangedBy  = local_last_changed_by;
+    LocalLastChangedAt  = local_last_changed_at;
+  }
+}
