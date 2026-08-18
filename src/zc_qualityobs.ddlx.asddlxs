@@ -1,45 +1,71 @@
 @Metadata.layer: #CORE
 
 @UI: {
-  presentationVariant: [ { sortOrder: [ { by: 'CreatedAt', direction: #DESC } ] } ]
+  headerInfo: { typeName:       'Quality Observation',
+                typeNamePlural: 'Quality Observations',
+                title:       { type: #STANDARD, value: 'HeatNumber' },
+                description: { type: #STANDARD, value: 'DefectType' } },
+  presentationVariant: [{ sortOrder: [{ by: 'CreatedAt', direction: #DESC }] }]
 }
 
 annotate view ZC_QualityObs with
 {
+  @UI.facet: [ { id:       'Observation',
+                 purpose:  #STANDARD,
+                 type:     #IDENTIFICATION_REFERENCE,
+                 label:    'Defect Information',
+                 position: 10 },
+               { id:              'ReportingData',
+                 purpose:         #STANDARD,
+                 type:            #FIELDGROUP_REFERENCE,
+                 label:           'Reporting Details',
+                 targetQualifier: 'ReportingInfo',
+                 position:        20 } ]
+
   @UI.hidden: true
   ObservationUUID;
 
-  @UI: { lineItem:       [ { position: 10, importance: #HIGH, label: 'ID' } ] }
+  @UI: { lineItem:       [ { position: 10, importance: #HIGH, label: 'ID' } ],
+         identification: [ { position: 10 } ] }
   ObservationID;
 
   @UI: { lineItem:       [ { position: 20, importance: #HIGH } ],
+         identification: [ { position: 20 } ],
          selectionField: [ { position: 10 } ] }
   Material;
 
   @UI: { lineItem:       [ { position: 30 } ],
+         identification: [ { position: 30 } ],
          selectionField: [ { position: 20 } ] }
   HeatNumber;
 
   @UI: { lineItem:       [ { position: 40 } ],
+         identification: [ { position: 40 } ],
          selectionField: [ { position: 30 } ] }
   DefectType;
 
   @UI: { lineItem:       [ { position: 50, criticality: 'Severity' } ],
+         identification: [ { position: 50 } ],
          selectionField: [ { position: 40 } ] }
   Severity;
 
-  @UI: { lineItem:       [ { position: 60 } ] }
+  @UI: { lineItem:       [ { position: 60 } ],
+         identification: [ { position: 60 } ] }
   Status;
 
-  @UI: { lineItem:       [ { position: 80, label: 'Reported By' } ] }
+  @UI: { identification: [ { position: 70 } ] }
+  CommentText;
+
+  @UI: { lineItem:   [ { position: 80, label: 'Reported By' } ],
+         fieldGroup: [ { qualifier: 'ReportingInfo', position: 10, label: 'Reported By' } ] }
   CreatedBy;
 
-  @UI: { lineItem:       [ { position: 90, label: 'Reported At' } ] }
+  @UI: { lineItem:   [ { position: 90, label: 'Reported At' } ],
+         fieldGroup: [ { qualifier: 'ReportingInfo', position: 20, label: 'Reported At' } ] }
   CreatedAt;
-
+  
   @UI.hidden: true
   LastChangedAt;
-
   @UI.hidden: true
   LocalLastChangedAt;
 }
