@@ -12,6 +12,23 @@ ENDCLASS.
 CLASS zcl_qm_gen_data IMPLEMENTATION.
   METHOD if_oo_adt_classrun~main.
 
+    " ---- value help content ----
+    DELETE FROM zqm_deftype.
+    INSERT zqm_deftype FROM TABLE @( VALUE #(
+      ( defect_type = 'CRCK' description = 'Crack' )
+      ( defect_type = 'PORO' description = 'Porosity' )
+      ( defect_type = 'SCRA' description = 'Scratch' )
+      ( defect_type = 'INCL' description = 'Inclusion' )
+      ( defect_type = 'DENT' description = 'Dent' )
+    ) ).
+
+    DELETE FROM zqm_severity.
+    INSERT zqm_severity FROM TABLE @( VALUE #(
+      ( severity = '1' description = 'Critical' )
+      ( severity = '2' description = 'Major' )
+      ( severity = '3' description = 'Minor' )
+    ) ).
+
     DELETE FROM zquality_obs.
 
     GET TIME STAMP FIELD DATA(now).

@@ -8,36 +8,26 @@ define root view entity ZC_QualityObs
   as projection on ZI_QualityObs
 {
   key ObservationUUID,
-
-      @EndUserText.label: 'Observation ID'
       @Search.defaultSearchElement: true
       ObservationID,
-
-      @EndUserText.label: 'Material'
       @Search.defaultSearchElement: true
       Material,
-
-      @EndUserText.label: 'Heat Number'
       HeatNumber,
 
-      @EndUserText.label: 'Defect Type'
+      @Consumption.valueHelpDefinition: [{ entity: { name: 'ZI_QM_DefectType_VH', element: 'DefectType' },
+                                           qualifier: 'DEFTYPE',
+                                           useForValidation: true }]
       DefectType,
 
-      @EndUserText.label: 'Severity'
+      @Consumption.valueHelpDefinition: [{ entity: { name: 'ZI_QM_Severity_VH', element: 'Severity' },
+                                           qualifier: 'SEVERITY',
+                                           useForValidation: true }]
       Severity,
 
-      @EndUserText.label: 'Comment'
       CommentText,
-
-      @EndUserText.label: 'Status'
       Status,
-
-      @EndUserText.label: 'Reported By'
       CreatedBy,
-
-      @EndUserText.label: 'Reported At'
       CreatedAt,
-
       LastChangedAt,
       LocalLastChangedAt
 }
