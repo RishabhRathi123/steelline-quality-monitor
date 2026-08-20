@@ -14,6 +14,8 @@ CLASS lhc_Observation DEFINITION INHERITING FROM cl_abap_behavior_handler.
       keys FOR Observation~setDefaults.
     METHODS get_instance_features FOR INSTANCE FEATURES
       Importing keys REQUEST requested_features FOR Observation RESULT result.
+    METHODS validateseverity FOR VALIDATE ON SAVE
+      keys FOR observation~validateseverity.
 
 ENDCLASS.
 
@@ -69,4 +71,33 @@ CLASS lhc_Observation IMPLEMENTATION.
 
   ENDMETHOD.
 
+  METHOD validateSeverity.
+
+    READ ENTITIES OF ZI_QualityObs IN LOCAL MODE
+      ENTITY Observation
+        FIELDS ( Severity CommentText ) WITH CORRESPONDING #( keys )
+      RESULT DATA(observations).
+
+    LOOP AT observations INTO DATA(obs).
+
+      " clear any previous message for this state area, unconditionally
+      APPEND VALUE #( %tky        = obs-%tky
+                      %state_area = 'VALIDATE_SEVERITY' ) TO reported-observation.
+
+      IF obs-Severity = '1' AND obs-CommentText IS INITIAL.
+
+        APPEND VALUE #( %tky = obs-%tky ) TO failed-observation.
+
+        APPEND VALUE #( %tky                 = obs-%tky
+                        %state_area          = 'VALIDATE_SEVERITY'
+                        %msg                 = new_message_with_text(
+                                                 severity = if_abap_behv_message=>severity-error
+                                                 text     = |A critical observation must have a comment| )
+                        %element-CommentText = if_abap_behv=>mk-on ) TO reported-observation.
+
+      ENDIF.
+
+    ENDLOOP.
+
+  ENDMETHOD.
 ENDCLASS.

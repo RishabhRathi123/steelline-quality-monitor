@@ -21,12 +21,17 @@ etag master LocalLastChangedAt
   field ( mandatory ) Material, HeatNumber, DefectType, Severity;
   field ( features : instance ) CommentText;
   determination setDefaults on modify { create; }
+  validation validateSeverity on save { create; update; field Severity, CommentText; }
 
   draft action Resume;
   draft action Edit;
   draft action Activate optimized;
   draft action Discard;
-  draft determine action Prepare;
+  draft determine action Prepare
+  {
+    validation validateSeverity;
+  }
+
 
   mapping for zquality_obs
   {
