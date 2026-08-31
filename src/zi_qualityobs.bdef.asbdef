@@ -20,6 +20,7 @@ etag master LocalLastChangedAt
                      LocalLastChangedBy, LocalLastChangedAt;
   field ( mandatory ) Material, HeatNumber, DefectType, Severity;
   field ( features : instance ) CommentText;
+  action ( features : instance ) acknowledge result [1] $self;
   determination setDefaults on modify { create; }
   validation validateSeverity on save { create; update; field Severity, CommentText; }
 

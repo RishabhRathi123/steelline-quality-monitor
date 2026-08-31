@@ -49,8 +49,10 @@ annotate view ZC_QualityObs with
          selectionField: [ { position: 40 } ] }
   Severity;
 
-  @UI: { lineItem:       [ { position: 60 } ],
-         identification: [ { position: 60 } ] }
+  @UI: { lineItem:       [ { position: 60 },
+                           { type: #FOR_ACTION, dataAction: 'acknowledge', label: 'Acknowledge' } ],
+         identification: [ { position: 60 },
+                           { type: #FOR_ACTION, dataAction: 'acknowledge', label: 'Acknowledge' } ] }
   Status;
 
   @UI: { identification: [ { position: 70 } ] }

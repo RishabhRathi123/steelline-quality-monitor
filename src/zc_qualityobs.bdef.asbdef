@@ -13,6 +13,7 @@ define behavior for ZC_QualityObs alias Observation
   use action Discard;
   use action Resume;
   use action Prepare;
+  use action acknowledge;
 
   side effects
   {

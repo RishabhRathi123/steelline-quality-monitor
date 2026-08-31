@@ -16,6 +16,8 @@ CLASS lhc_Observation DEFINITION INHERITING FROM cl_abap_behavior_handler.
       Importing keys REQUEST requested_features FOR Observation RESULT result.
     METHODS validateseverity FOR VALIDATE ON SAVE
       keys FOR observation~validateseverity.
+    METHODS acknowledge FOR MODIFY
+      keys FOR ACTION observation~acknowledge RESULT result.
 
 ENDCLASS.
 
@@ -56,19 +58,21 @@ CLASS lhc_Observation IMPLEMENTATION.
 
   ENDMETHOD.
 
-  METHOD get_instance_features.
-
+   METHOD get_instance_features.
     READ ENTITIES OF ZI_QualityObs IN LOCAL MODE
       ENTITY Observation
-        FIELDS ( Severity ) WITH CORRESPONDING #( keys )
-      RESULT DATA(observations).
+        FIELDS ( Severity Status ) WITH CORRESPONDING #( keys )
+      RESULT DATA(observations)
+      FAILED failed.
 
     result = VALUE #( FOR obs IN observations
-                      ( %tky               = obs-%tky
-                        %field-CommentText = COND #( WHEN obs-Severity = '1'
-                                                     THEN if_abap_behv=>fc-f-mandatory
-                                                     ELSE if_abap_behv=>fc-f-unrestricted ) ) ).
-
+                      ( %tky                = obs-%tky
+                        %field-CommentText  = COND #( WHEN obs-Severity = '1'
+                                                      THEN if_abap_behv=>fc-f-mandatory
+                                                      ELSE if_abap_behv=>fc-f-unrestricted )
+                        %action-acknowledge = COND #( WHEN obs-Status = obs_status-acknowledged
+                                                      THEN if_abap_behv=>fc-o-disabled
+                                                      ELSE if_abap_behv=>fc-o-enabled ) ) ).
   ENDMETHOD.
 
   METHOD validateSeverity.
@@ -100,4 +104,34 @@ CLASS lhc_Observation IMPLEMENTATION.
     ENDLOOP.
 
   ENDMETHOD.
+
+  METHOD acknowledge.
+
+    MODIFY ENTITIES OF ZI_QualityObs IN LOCAL MODE
+      ENTITY Observation
+        UPDATE FIELDS ( Status )
+        WITH VALUE #( FOR key IN keys ( %tky   = key-%tky
+                                        Status = obs_status-acknowledged ) )
+      FAILED failed
+      REPORTED reported.
+
+    READ ENTITIES OF ZI_QualityObs IN LOCAL MODE
+      ENTITY Observation
+        ALL FIELDS WITH CORRESPONDING #( keys )
+      RESULT DATA(observations).
+
+
+    LOOP AT observations INTO DATA(obsv).
+      APPEND VALUE #( %tky = obsv-%tky
+                      %msg = new_message_with_text(
+                               severity = if_abap_behv_message=>severity-success
+                               text     = |Observation { obsv-ObservationID ALPHA = OUT } acknowledged| ) )
+             TO reported-observation.
+    ENDLOOP.
+
+    result = VALUE #( FOR obs IN observations ( %tky   = obs-%tky
+                                                %param = obs ) ).
+
+  ENDMETHOD.
+
 ENDCLASS.
